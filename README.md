@@ -3,7 +3,7 @@
 |----------------------------|--------------|-------------------|
 | Olivera Juan Cruz          | Scrum Master | juancruzolivera28 |
 | Gomez Borjas Agustina Luz  | Dev Lead     | agusfaqucp        |
-| Fritz Thaiana Ailen        | QA Lead      |                   |
+| Fritz Thaiana Ailen        | QA Lead      | fritzthai         |
 | Balthazar Ibarra           | UX Lead      |                   |
 |                            | Dev          |                   |
 
