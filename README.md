@@ -5,7 +5,6 @@
 | Gomez Borjas Agustina Luz  | Dev Lead     | agusfaqucp        |
 | Fritz Thaiana Ailen        | QA Lead      | fritzthai         |
 | Balthazar Ibarra           | UX Lead      |                   |
-|                            | Dev          |                   |
 
 Descripcion breve del proyecto:
 
