@@ -73,7 +73,6 @@ B            ├───────┼───────┼─────�
 
 ---
 
-> ⚠️ **Riesgos prioritarios:** R05 (deuda técnica / QA) y R06 (integración front-back) son los de mayor nivel (CRÍTICO) y deben revisarse en cada sincronización del equipo.
 
 ---
 
