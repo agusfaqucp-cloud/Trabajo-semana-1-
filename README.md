@@ -1,4 +1,4 @@
-is2-20226teamkutz
+Mediturno
 | Nombre                     | Rol          | GitHub             | 
 |----------------------------|--------------|--------------------|
 | Olivera Juan Cruz          | Scrum Master | @juancruzolivera28 |
