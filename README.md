@@ -22,4 +22,4 @@ Patrones a Utilizar:
 
 - PATRÓN OBSERVER
 
-- PATRÓN STRATEGY
+- PATRÓN Strategy 
