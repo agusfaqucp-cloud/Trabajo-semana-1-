@@ -2,7 +2,7 @@
 
 **Proyecto:** MediTurnos - Sistema de gestion de turnos medicos  
 **Materia:** Ingenieria de Software II  
-**Entrega:** TP2 - Parte A (Eje 3)
+**Entrega:** TP2 
 
 ---
 
