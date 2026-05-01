@@ -17,21 +17,22 @@ Para esta entrega completamos el prototipo del sistema en Figma cubriendo el flu
 3. **Gestion de turnos** - pantalla de consulta con filtros por fecha, medico y estado del turno
 
 **Link al prototipo Figma:**  
-[Agregar link publico de Figma aqui]
+https://www.figma.com/design/mRutYYwYpRe4THQYHtVc3X/MediTurnos---Pantallas?node-id=0-1&t=hKwMku6UAWEPle7o-1
 
 **Capturas del prototipo:**
 
 > Pantalla 1 - Login
+<img width="767" height="494" alt="image" src="https://github.com/user-attachments/assets/404a428e-5ee2-4167-8d9b-01342f242658" />
 
-![Login](capturas/Captura%20Login.PNG)
 
 > Pantalla 2 - Panel principal
+<img width="1366" height="729" alt="image" src="https://github.com/user-attachments/assets/9dc59c32-16c1-488b-8a25-5a2645d55fb0" />
 
-![Panel principal](capturas/Captura%20Venatana%20Principal.PNG)
+
 
 > Pantalla 3 - Gestion de turnos
+<img width="1364" height="723" alt="image" src="https://github.com/user-attachments/assets/5285cd9c-a996-415b-805c-6965ef06e962" />
 
-![Gestion de turnos](capturas/Captura%20Principal%20con%20Gestor.PNG)
 
 ---
 
@@ -91,6 +92,4 @@ La ISO 13407 propone un ciclo iterativo de cuatro fases para desarrollar sistema
 
 En la primera fase, antes de disenar cualquier pantalla, identificamos que el sistema tenia tres tipos de usuario con necesidades muy distintas y contextos de uso diferentes, lo que documentamos en la seccion A2. En la segunda fase definimos que cada rol debia acceder solo a las funciones que le corresponden, requisito que se implemento directamente en el codigo del TP1 con el sistema de roles. En la tercera fase disenamos y construimos el prototipo con la interfaz diferenciada por rol, la paleta de colores consistente con un entorno medico y las pantallas que documentamos en A1. La cuarta fase, la evaluacion formal con usuarios reales, es la que no pudimos completar en profundidad por las limitaciones del contexto academico, pero esta auditoria ISO 9241-11 es nuestra aproximacion a esa evaluacion: tomamos el prototipo, definimos metricas concretas, identificamos dos problemas reales y propusimos mejoras especificas. Si el proyecto continuara, el paso siguiente seria implementar esas mejoras y volver a evaluar, cerrando el ciclo iterativo que propone la norma.
 
----
 
-*Documento correspondiente al TP2 - Ingenieria de Software II*
