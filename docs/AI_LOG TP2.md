@@ -1,17 +1,13 @@
 # Registro de uso de IA - MediTurnos
 
-**Proyecto:** MediTurnos - Sistema de gestion de turnos medicos  
-**Materia:** Ingenieria de Software II
-
----
-
 ## TP2 - Pruebas de Software y Diseño de Interfaz
 
 ### Herramientas utilizadas
 
-- **Claude (Anthropic)** - Asistente de IA utilizado para consultas puntuales durante el desarrollo del TP2
+- **Claude (Anthropic)** 
+-  **Chat GPT** 
 
----
+
 
 ### Detalle de uso
 
@@ -23,7 +19,7 @@ Las capturas del prototipo Figma, la navegacion entre pantallas y la decision de
 
 **Modificaciones del equipo:** todo el contenido fue revisado y adaptado al sistema real. Los criterios de eficiencia y satisfaccion elegidos para la auditoria surgen de problemas que identificamos nosotros al usar el sistema, la IA solo ayudo a formalizarlos con el vocabulario de la norma.
 
----
+
 
 #### Pruebas unitarias (Parte B)
 
@@ -35,7 +31,7 @@ Para la configuracion del `pom.xml` y el `test.yml` de GitHub Actions, la IA exp
 
 **Modificaciones del equipo:** los tests fueron ejecutados y verificados por el equipo en VS Code. La estructura de carpetas (`pruebas/unit/`), la subida del codigo al repositorio y la resolucion de errores de compilacion en Actions fueron realizadas por el equipo de forma independiente.
 
----
+
 
 #### Funcionalidades nuevas agregadas en TP2
 
@@ -43,23 +39,10 @@ Se agrego cierre automatico de sesion por inactividad en `VentanaPrincipal.java`
 
 Esta funcionalidad se agrego como respuesta a una observacion del profesor sobre seguridad del sistema, y esta directamente relacionada con el principio de menor exposicion de datos de ISO/IEC 27001 que analizamos en el TP anterior.
 
----
 
-#### Lo que NO hizo la IA
-
-- No disenio ninguna pantalla del sistema
-- No definio que patrones de disenio usar (eso fue del TP1)
-- No subio ningun archivo al repositorio
-- No configuro GitHub en la computadora del equipo
-- No resolvio los errores de compilacion de Actions (eso lo resolvio el equipo probando)
-- No grabo el video de evidencia de los tests
-
----
 
 ### Justificacion del uso
 
 Usamos IA como herramienta de apoyo para entender conceptos nuevos (testing formal, configuracion de Maven, GitHub Actions) y para agilizar la generacion de documentacion estructurada. En todos los casos el equipo reviso, modifico y valido lo generado antes de incluirlo en el trabajo. El uso de IA fue transparente y acotado a tareas de soporte, no de reemplazo del trabajo del equipo.
 
----
 
-*Documento actualizado en el marco del TP2 - Ingenieria de Software II*
