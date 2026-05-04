@@ -2,13 +2,12 @@
 
 **Proyecto:** MediTurnos - Sistema de gestion de turnos medicos  
 **Materia:** Ingenieria de Software II  
-**Ultima actualizacion:** TP2
 
 ---
 
 ## Introduccion
 
-Este documento consolida la estrategia de pruebas del proyecto MediTurnos. La idea es tener en un solo lugar todo lo que tiene que ver con como probamos el sistema: que herramientas usamos, que casos de prueba implementamos, como pensamos escalar las pruebas en el futuro y que decisiones tomamos en el camino. Se va actualizando a medida que el proyecto avanza.
+La idea es tener en un solo lugar todo lo que tiene que ver con como probamos el sistema: que herramientas usamos, que casos de prueba implementamos, como pensamos escalar las pruebas en el futuro y que decisiones tomamos en el camino. Se va actualizando a medida que el proyecto avanza.
 
 ---
 
