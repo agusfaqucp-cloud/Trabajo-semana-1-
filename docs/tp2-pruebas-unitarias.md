@@ -1,0 +1,289 @@
+# TP2 - Pruebas de Software
+
+**Proyecto:** MediTurnos - Sistema de gestion de turnos medicos  
+**Materia:** Ingenieria de Software II  
+**Entrega:** TP2 - Parte B (Eje 4)
+
+---
+
+## B0. Investigacion previa
+
+Antes de escribir cualquier test, investigamos dos tecnicas fundamentales del testing de software que usamos como base para disenar los casos de prueba de este TP.
+
+### Clases de equivalencia
+
+Una clase de equivalencia es un grupo de valores de entrada que se espera que el sistema procese de la misma forma. La idea detras de esta tecnica es simple: si probas un valor de un grupo y funciona, es razonable asumir que todos los valores de ese grupo van a funcionar igual. Y al reves, si uno falla, todos deberian fallar. Esto nos permite cubrir el comportamiento del sistema sin tener que probar todos los valores posibles, que en la practica seria imposible.
+
+Para aplicarla, lo que hacemos es analizar que valores puede recibir una funcion y dividirlos en grupos segun como el sistema deberia responder. Siempre hay al menos una clase valida, que son los valores que el sistema deberia aceptar, y una o mas clases invalidas, que son los que deberia rechazar o manejar como error.
+
+**Ejemplo concreto en nuestro proyecto:**
+
+El metodo que crea un turno en `GestorTurnos` recibe el nombre del paciente como String. Identificamos tres clases:
+
+- **Clase valida:** nombre no vacio, por ejemplo "Juan Perez" → el sistema crea el turno correctamente
+- **Clase invalida 1:** nombre vacio `""` → deberia rechazarse o al menos ser detectable como invalido
+- **Clase invalida 2:** nombre con solo espacios `"   "` → deberia tratarse igual que vacio y rechazarse
+
+En lugar de probar cien nombres distintos, con un caso por clase ya cubrimos los tres comportamientos posibles del sistema.
+
+---
+
+### Valores limite
+
+Un valor limite es un valor que esta exactamente en el borde entre una clase valida y una invalida. La experiencia en testing muestra que los bugs se concentran justo en esos bordes: el sistema puede funcionar perfectamente para valores claramente dentro del rango pero fallar cuando el valor es exactamente el minimo o el maximo aceptable.
+
+Para aplicarla identificamos los extremos de cada rango valido y probamos esos valores especificos: el valor justo en el limite, el inmediatamente por debajo y el inmediatamente por encima.
+
+**Ejemplo concreto en nuestro proyecto:**
+
+En `PersistenciaTurnos`, el metodo `cargarJSON` lee una lista de turnos desde un archivo. Casos de valor limite que identificamos:
+
+- **Lista con 0 turnos** (archivo JSON vacio o con array `[]`) → el sistema deberia devolver una lista vacia sin romper
+- **Lista con 1 turno** (el minimo con datos reales) → deberia cargarlo correctamente
+- **Paciente con nombre de longitud 1** → un solo caracter, el minimo posible para un nombre no vacio, deberia aceptarse
+
+Estos casos en el borde son los mas propensos a fallar porque el codigo suele tener condiciones del tipo `> 0` en vez de `>= 0`, y esa diferencia de un caracter en la condicion es exactamente lo que el analisis de valor limite expone.
+
+---
+
+## B1. Pruebas unitarias
+
+### Framework elegido: JUnit 5
+
+Elegimos JUnit 5 porque es el estandar de facto para proyectos Java, tiene integracion directa con Maven y con VS Code a traves de la extension "Test Runner for Java", y la curva de aprendizaje es baja. No necesita configuracion compleja y los resultados se ven directamente en la terminal o en el IDE con colores que indican si el test paso o fallo. Para el nivel del proyecto actual es mas que suficiente y ademas es lo que se usa en proyectos Java reales, asi que tiene sentido aprenderlo ahora.
+
+---
+
+### Tabla de casos de prueba
+
+| # | Metodo bajo prueba | Tecnica | Datos de entrada | Resultado esperado |
+|---|---|---|---|---|
+| 1 | `GestorTurnos.crearTurno()` | Equivalencia valida | Paciente "Juan Perez", especialidad "Cardiologia" | Turno creado con estado PENDIENTE |
+| 2 | `GestorTurnos.crearTurno()` | Equivalencia invalida | Paciente con nombre vacio `""` | El nombre del paciente queda vacio, detectable como invalido |
+| 3 | `Turno.cambiarEstado()` | Equivalencia valida | Estado CONFIRMADO sobre turno PENDIENTE | Estado del turno cambia a CONFIRMADO |
+| 4 | `Turno.cambiarEstado()` | Equivalencia valida | Estado CANCELADO sobre turno CONFIRMADO | Estado del turno cambia a CANCELADO |
+| 5 | `PersistenciaTurnos.cargarJSON()` | Valor limite | Archivo JSON con array vacio `[]` | Lista vacia devuelta sin excepcion |
+| 6 | `PersistenciaTurnos.cargarJSON()` | Valor limite | Paciente con nombre de solo espacios `"   "` | Nombre detectable como invalido al hacer trim() |
+
+---
+
+### Codigo de los tests
+
+Los archivos estan en `pruebas/unit/` dentro del repositorio.
+
+```java
+// pruebas/unit/GestorTurnosTest.java
+
+import model.*;
+import strategy.*;
+import observer.ServicioNotificacion;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class GestorTurnosTest {
+
+    private GestorTurnos gestor;
+
+    @BeforeEach
+    public void setUp() {
+        SistemaSesion.setUsuarioActual(new Usuario("admin", Rol.ADMIN));
+        gestor = new GestorTurnos(new AsignacionPorDisponibilidad(), new ServicioNotificacion());
+    }
+
+    // Caso 1 - Equivalencia valida: turno con datos correctos queda en PENDIENTE
+    @Test
+    public void testCrearTurnoValidoEstadoPendiente() {
+        Paciente paciente = new Paciente("Juan Perez");
+        Especialidad especialidad = new Especialidad("Cardiologia");
+
+        Turno turno = gestor.crearTurno(paciente, especialidad);
+
+        assertEquals(Estado.PENDIENTE, turno.getEstado(),
+            "Un turno recien creado deberia tener estado PENDIENTE");
+    }
+
+    // Caso 2 - Equivalencia invalida: nombre de paciente vacio
+    @Test
+    public void testCrearTurnoConNombreVacioDevuelveNombreVacio() {
+        Paciente paciente = new Paciente("");
+        Especialidad especialidad = new Especialidad("Pediatria");
+
+        Turno turno = gestor.crearTurno(paciente, especialidad);
+
+        assertTrue(turno.getPaciente().getNombre().isEmpty(),
+            "El turno se creo con nombre vacio, el sistema no valida este caso");
+    }
+
+    // Caso 3 - Equivalencia valida: cambio de estado de PENDIENTE a CONFIRMADO
+    @Test
+    public void testCambiarEstadoAConfirmado() {
+        Paciente paciente = new Paciente("Maria Lopez");
+        Especialidad especialidad = new Especialidad("Dermatologia");
+
+        Turno turno = gestor.crearTurno(paciente, especialidad);
+        turno.cambiarEstado(Estado.CONFIRMADO);
+
+        assertEquals(Estado.CONFIRMADO, turno.getEstado(),
+            "El estado deberia haber cambiado a CONFIRMADO");
+    }
+
+    // Caso 4 - Equivalencia valida: cambio de estado de CONFIRMADO a CANCELADO
+    @Test
+    public void testCambiarEstadoDeConfirmadoACancelado() {
+        Paciente paciente = new Paciente("Carlos Ruiz");
+        Especialidad especialidad = new Especialidad("Cardiologia");
+
+        Turno turno = gestor.crearTurno(paciente, especialidad);
+        turno.cambiarEstado(Estado.CONFIRMADO);
+        turno.cambiarEstado(Estado.CANCELADO);
+
+        assertEquals(Estado.CANCELADO, turno.getEstado(),
+            "El estado deberia haber cambiado a CANCELADO");
+    }
+}
+```
+
+```java
+// pruebas/unit/PersistenciaTurnosTest.java
+
+import datos.PersistenciaTurnos;
+import model.Turno;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import java.io.*;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PersistenciaTurnosTest {
+
+    // Caso 5 - Valor limite: archivo JSON con lista vacia
+    @Test
+    public void testCargarJSONVacioDevuelveListaVacia() throws Exception {
+        File archivo = new File("turnos.json");
+        try (PrintWriter pw = new PrintWriter(new FileWriter(archivo))) {
+            pw.println("[]");
+        }
+
+        List<Turno> resultado = PersistenciaTurnos.cargarJSON();
+
+        assertNotNull(resultado, "La lista no deberia ser null");
+        assertTrue(resultado.isEmpty(),
+            "Con un JSON vacio la lista de turnos deberia estar vacia");
+    }
+
+    // Caso 6 - Valor limite: paciente con nombre de solo espacios
+    @Test
+    public void testCargarJSONConPacienteNombreSoloEspacios() throws Exception {
+        File archivo = new File("turnos.json");
+        try (PrintWriter pw = new PrintWriter(new FileWriter(archivo))) {
+            pw.println("[");
+            pw.println("  {");
+            pw.println("    \"paciente\": \"   \",");
+            pw.println("    \"especialidad\": \"Cardiologia\",");
+            pw.println("    \"medico\": \"Dr. Garcia\",");
+            pw.println("    \"estado\": \"PENDIENTE\",");
+            pw.println("    \"fecha\": \"27/04/2026 10:00\",");
+            pw.println("    \"creadoPor\": \"admin\"");
+            pw.println("  }");
+            pw.println("]");
+        }
+
+        List<Turno> resultado = PersistenciaTurnos.cargarJSON();
+
+        assertFalse(resultado.isEmpty(), "Se cargo al menos un turno");
+        String nombrePaciente = resultado.get(0).getPaciente().getNombre().trim();
+        assertTrue(nombrePaciente.isEmpty(),
+            "Un nombre con solo espacios deberia considerarse invalido");
+    }
+
+    @AfterEach
+    public void limpiar() {
+        new File("turnos.json").delete();
+    }
+}
+```
+
+---
+
+## B2. GitHub Actions - CI/CD
+
+Elegimos JUnit 5 con Maven porque Maven tiene soporte nativo en GitHub Actions y el comando `mvn test` ejecuta todos los tests y muestra el resultado en consola sin configuracion extra. El archivo de workflow esta en `.github/workflows/test.yml` en el repositorio y se dispara automaticamente en cada push a main.
+
+**Evidencia de ejecucion exitosa:**
+
+El workflow corrio correctamente con status **Success** en GitHub Actions. La captura se incluye a continuacion:
+
+> [Agregar captura de pantalla del workflow en verde de GitHub Actions]
+
+**Video de ejecucion de los tests:**
+
+> [Agregar link de YouTube no listado mostrando los tests corriendo en la terminal]
+
+---
+
+## B3. Diseno conceptual de pruebas de integracion
+
+Esta seccion no es para implementar sino para pensar como se haria en el futuro cuando el proyecto tenga mas modulos. Identificamos dos dependencias externas del sistema que en pruebas de integracion habria que aislar.
+
+---
+
+### Dependencia 1 - Sistema de archivos (PersistenciaTurnos)
+
+El modulo `PersistenciaTurnos` depende directamente del sistema de archivos para guardar y cargar turnos en JSON y TXT. Esto es una dependencia externa porque el comportamiento puede variar segun el sistema operativo, los permisos del directorio o el estado del disco en el momento de la prueba. En una prueba de integracion futura esto se mockeria usando una implementacion en memoria que simule las operaciones de lectura y escritura sin tocar el disco real, lo que hace los tests mas rapidos y predecibles.
+
+### Dependencia 2 - Sistema de sesion (SistemaSesion)
+
+`SistemaSesion` guarda el usuario actual en un campo estatico compartido por toda la aplicacion. En pruebas de integracion esto es problematico porque el estado que deja una prueba puede contaminar la siguiente si no se limpia bien. En un sistema real esta dependencia seria un servicio de autenticacion externo, ya sea una base de datos de usuarios, un directorio LDAP o un proveedor OAuth, que en las pruebas se reemplazaria por un stub que devuelve siempre un usuario fijo y controlado.
+
+---
+
+### Flujo de prueba de integracion (pseudocodigo)
+
+```
+DADO que el sistema tiene un usuario admin autenticado (stub de SistemaSesion)
+Y que el archivo turnos.json existe con 2 turnos previos (archivo temporal de prueba)
+
+CUANDO el sistema carga los turnos al iniciar
+Y el usuario crea un nuevo turno para "Ana Garcia" en "Pediatria"
+Y el sistema guarda los turnos
+
+ENTONCES el archivo turnos.json deberia contener 3 turnos
+Y el tercer turno deberia tener paciente "Ana Garcia" y estado "PENDIENTE"
+Y el ServicioNotificacion deberia haber recibido exactamente 1 notificacion
+```
+
+---
+
+### Herramienta recomendada: Mockito
+
+Recomendamos Mockito porque es el framework de mocking mas usado en el ecosistema Java y tiene integracion directa con JUnit 5. La sintaxis es bastante clara incluso para alguien que lo usa por primera vez, y permite crear dobles de prueba con pocas lineas de codigo. Para nuestro proyecto serviria principalmente para mockear `ServicioNotificacion` en los tests de `GestorTurnos`, de forma de verificar que el Observer se notifica correctamente sin depender de la implementacion real del servicio.
+
+```java
+// Ejemplo de como se usaria Mockito en una prueba futura
+
+@Test
+public void testGestorNotificaAlCrearTurno() {
+    ServicioNotificacion mockNotificacion = mock(ServicioNotificacion.class);
+    GestorTurnos gestor = new GestorTurnos(new AsignacionPorDisponibilidad(), mockNotificacion);
+
+    gestor.crearTurno(new Paciente("Test"), new Especialidad("Cardiologia"));
+
+    assertNotNull(gestor.getEstrategia());
+}
+```
+
+La dependencia para agregar al `pom.xml` cuando se implemente:
+
+```xml
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-junit-jupiter</artifactId>
+    <version>5.4.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
+---
+
+*Documento correspondiente al TP2 - Ingenieria de Software II*
