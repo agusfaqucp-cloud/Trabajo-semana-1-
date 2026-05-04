@@ -1,14 +1,9 @@
 # TP2 - Pruebas de Software
 
-**Proyecto:** MediTurnos - Sistema de gestion de turnos medicos  
-**Materia:** Ingenieria de Software II  
-**Entrega:** TP2 - Parte B (Eje 4)
-
----
 
 ## B0. Investigacion previa
 
-Antes de escribir cualquier test, investigamos dos tecnicas fundamentales del testing de software que usamos como base para disenar los casos de prueba de este TP.
+Antes de escribir cualquier test, investigamos dos tecnicas fundamentales del testing de software que usamos como base para diseñar los casos de prueba de este TP.
 
 ### Clases de equivalencia
 
@@ -26,7 +21,7 @@ El metodo que crea un turno en `GestorTurnos` recibe el nombre del paciente como
 
 En lugar de probar cien nombres distintos, con un caso por clase ya cubrimos los tres comportamientos posibles del sistema.
 
----
+
 
 ### Valores limite
 
@@ -44,15 +39,15 @@ En `PersistenciaTurnos`, el metodo `cargarJSON` lee una lista de turnos desde un
 
 Estos casos en el borde son los mas propensos a fallar porque el codigo suele tener condiciones del tipo `> 0` en vez de `>= 0`, y esa diferencia de un caracter en la condicion es exactamente lo que el analisis de valor limite expone.
 
----
+
 
 ## B1. Pruebas unitarias
 
 ### Framework elegido: JUnit 5
 
-Elegimos JUnit 5 porque es el estandar de facto para proyectos Java, tiene integracion directa con Maven y con VS Code a traves de la extension "Test Runner for Java", y la curva de aprendizaje es baja. No necesita configuracion compleja y los resultados se ven directamente en la terminal o en el IDE con colores que indican si el test paso o fallo. Para el nivel del proyecto actual es mas que suficiente y ademas es lo que se usa en proyectos Java reales, asi que tiene sentido aprenderlo ahora.
+Elegimos JUnit 5 porque es el estandar para proyectos Java, tiene integracion directa con Maven y con VS Code a traves de la extension "Test Runner for Java", y la curva de aprendizaje es baja. No necesita configuracion compleja y los resultados se ven directamente en la terminal o en el IDE con colores que indican si el test paso o fallo.
 
----
+
 
 ### Tabla de casos de prueba
 
@@ -65,7 +60,7 @@ Elegimos JUnit 5 porque es el estandar de facto para proyectos Java, tiene integ
 | 5 | `PersistenciaTurnos.cargarJSON()` | Valor limite | Archivo JSON con array vacio `[]` | Lista vacia devuelta sin excepcion |
 | 6 | `PersistenciaTurnos.cargarJSON()` | Valor limite | Paciente con nombre de solo espacios `"   "` | Nombre detectable como invalido al hacer trim() |
 
----
+
 
 ### Codigo de los tests
 
@@ -91,7 +86,7 @@ public class GestorTurnosTest {
         gestor = new GestorTurnos(new AsignacionPorDisponibilidad(), new ServicioNotificacion());
     }
 
-    // Caso 1 - Equivalencia valida: turno con datos correctos queda en PENDIENTE
+Caso 1 - Equivalencia valida: turno con datos correctos queda en PENDIENTE
     @Test
     public void testCrearTurnoValidoEstadoPendiente() {
         Paciente paciente = new Paciente("Juan Perez");
@@ -103,7 +98,7 @@ public class GestorTurnosTest {
             "Un turno recien creado deberia tener estado PENDIENTE");
     }
 
-    // Caso 2 - Equivalencia invalida: nombre de paciente vacio
+Caso 2 - Equivalencia invalida: nombre de paciente vacio
     @Test
     public void testCrearTurnoConNombreVacioDevuelveNombreVacio() {
         Paciente paciente = new Paciente("");
@@ -115,7 +110,7 @@ public class GestorTurnosTest {
             "El turno se creo con nombre vacio, el sistema no valida este caso");
     }
 
-    // Caso 3 - Equivalencia valida: cambio de estado de PENDIENTE a CONFIRMADO
+Caso 3 - Equivalencia valida: cambio de estado de PENDIENTE a CONFIRMADO
     @Test
     public void testCambiarEstadoAConfirmado() {
         Paciente paciente = new Paciente("Maria Lopez");
@@ -128,7 +123,7 @@ public class GestorTurnosTest {
             "El estado deberia haber cambiado a CONFIRMADO");
     }
 
-    // Caso 4 - Equivalencia valida: cambio de estado de CONFIRMADO a CANCELADO
+Caso 4 - Equivalencia valida: cambio de estado de CONFIRMADO a CANCELADO
     @Test
     public void testCambiarEstadoDeConfirmadoACancelado() {
         Paciente paciente = new Paciente("Carlos Ruiz");
@@ -157,7 +152,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PersistenciaTurnosTest {
 
-    // Caso 5 - Valor limite: archivo JSON con lista vacia
+Caso 5 - Valor limite: archivo JSON con lista vacia
     @Test
     public void testCargarJSONVacioDevuelveListaVacia() throws Exception {
         File archivo = new File("turnos.json");
@@ -172,7 +167,7 @@ public class PersistenciaTurnosTest {
             "Con un JSON vacio la lista de turnos deberia estar vacia");
     }
 
-    // Caso 6 - Valor limite: paciente con nombre de solo espacios
+Caso 6 - Valor limite: paciente con nombre de solo espacios
     @Test
     public void testCargarJSONConPacienteNombreSoloEspacios() throws Exception {
         File archivo = new File("turnos.json");
@@ -204,7 +199,7 @@ public class PersistenciaTurnosTest {
 }
 ```
 
----
+
 
 ## B2. GitHub Actions - CI/CD
 
@@ -218,15 +213,11 @@ El workflow corrio correctamente con status **Success** en GitHub Actions. La ca
 
 **Video de ejecucion de los tests:**
 
-> [Agregar link de YouTube no listado mostrando los tests corriendo en la terminal]
 
----
 
-## B3. Diseno conceptual de pruebas de integracion
 
-Esta seccion no es para implementar sino para pensar como se haria en el futuro cuando el proyecto tenga mas modulos. Identificamos dos dependencias externas del sistema que en pruebas de integracion habria que aislar.
+## B3. Diseño de pruebas de integracion
 
----
 
 ### Dependencia 1 - Sistema de archivos (PersistenciaTurnos)
 
@@ -236,7 +227,7 @@ El modulo `PersistenciaTurnos` depende directamente del sistema de archivos para
 
 `SistemaSesion` guarda el usuario actual en un campo estatico compartido por toda la aplicacion. En pruebas de integracion esto es problematico porque el estado que deja una prueba puede contaminar la siguiente si no se limpia bien. En un sistema real esta dependencia seria un servicio de autenticacion externo, ya sea una base de datos de usuarios, un directorio LDAP o un proveedor OAuth, que en las pruebas se reemplazaria por un stub que devuelve siempre un usuario fijo y controlado.
 
----
+
 
 ### Flujo de prueba de integracion (pseudocodigo)
 
@@ -253,14 +244,14 @@ Y el tercer turno deberia tener paciente "Ana Garcia" y estado "PENDIENTE"
 Y el ServicioNotificacion deberia haber recibido exactamente 1 notificacion
 ```
 
----
+
 
 ### Herramienta recomendada: Mockito
 
-Recomendamos Mockito porque es el framework de mocking mas usado en el ecosistema Java y tiene integracion directa con JUnit 5. La sintaxis es bastante clara incluso para alguien que lo usa por primera vez, y permite crear dobles de prueba con pocas lineas de codigo. Para nuestro proyecto serviria principalmente para mockear `ServicioNotificacion` en los tests de `GestorTurnos`, de forma de verificar que el Observer se notifica correctamente sin depender de la implementacion real del servicio.
+Mockito es el framework de mocking mas usado en Java y tiene integracion directa con JUnit 5. La sintaxis es bastante clara incluso para alguien que lo usa por primera vez, y permite crear dobles de prueba con pocas lineas de codigo. Para nuestro proyecto serviria principalmente para mockear `ServicioNotificacion` en los tests de `GestorTurnos`, de forma de verificar que el Observer se notifica correctamente sin depender de la implementacion real del servicio.
 
 ```java
-// Ejemplo de como se usaria Mockito en una prueba futura
+Ejemplo de como se usaria Mockito en una prueba futura
 
 @Test
 public void testGestorNotificaAlCrearTurno() {
@@ -284,6 +275,3 @@ La dependencia para agregar al `pom.xml` cuando se implemente:
 </dependency>
 ```
 
----
-
-*Documento correspondiente al TP2 - Ingenieria de Software II*
