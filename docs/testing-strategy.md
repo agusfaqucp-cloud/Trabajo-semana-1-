@@ -1,9 +1,6 @@
 # Estrategia de Pruebas - MediTurnos
 
 **Proyecto:** MediTurnos - Sistema de gestion de turnos medicos  
-**Materia:** Ingenieria de Software II  
-
-
 
 ## Introduccion
 
@@ -90,9 +87,9 @@ Para el futuro, la estrategia seria:
 
 
 
-## Plan de pruebas de estres (futuro)
+## Plan de pruebas (futuro)
 
-Las pruebas de estres estan reservadas para el trabajo integrador final. Lo que definimos conceptualmente por ahora es lo siguiente:
+Lo que definimos conceptualmente por ahora es lo siguiente:
 
 **Escenario 1 - Carga masiva de turnos**  
 Cargar un archivo `turnos.json` con 10.000 turnos y medir el tiempo que tarda el sistema en procesarlos y mostrarlos en la tabla. El tiempo aceptable deberia ser menor a 3 segundos.
