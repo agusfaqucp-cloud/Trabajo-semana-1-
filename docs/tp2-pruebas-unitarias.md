@@ -209,7 +209,7 @@ Elegimos JUnit 5 con Maven porque Maven tiene soporte nativo en GitHub Actions y
 
 El workflow corrio correctamente con status **Success** en GitHub Actions. La captura se incluye a continuacion:
 
-> [Agregar captura de pantalla del workflow en verde de GitHub Actions]
+<img width="1366" height="611" alt="image" src="https://github.com/user-attachments/assets/358d93d6-5df8-4388-af19-dbd09daa791f" />
 
 **Video de ejecucion de los tests:**
 
